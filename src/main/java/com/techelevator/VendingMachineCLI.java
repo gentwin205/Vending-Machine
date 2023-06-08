@@ -1,5 +1,6 @@
 package com.techelevator;
 
+import com.techelevator.view.Items;
 import com.techelevator.view.Menu;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class VendingMachineCLI {
 				try(Scanner read = new Scanner(vending)){
 					while(read.hasNextLine()){
 						String line = read.nextLine();
-						System.out.println(line + );
+						System.out.println(line);
 
 					}
 				}catch( Exception e ){

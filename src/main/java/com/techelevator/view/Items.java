@@ -1,6 +1,6 @@
 package com.techelevator.view;
 
-public class Items {
+public abstract class Items {
 
     private String name;
 
@@ -30,4 +30,5 @@ public class Items {
 
     }
 
+    public abstract String sound();
 }
