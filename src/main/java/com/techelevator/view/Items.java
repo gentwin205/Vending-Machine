@@ -6,6 +6,9 @@ public class Items {
 
     private double price;
 
+    private  int quantity;
+
+
     public String getName() {
         return name;
     }
@@ -14,9 +17,17 @@ public class Items {
         return price;
     }
 
-    public Items(String name, double price) {
+    public int getQuantity(){
+        return quantity;
+    }
+
+
+
+    public Items(String name, double price, int quantity) {
         this.name = name;
         this.price = price;
+        this.quantity = quantity;
+
     }
 
 }

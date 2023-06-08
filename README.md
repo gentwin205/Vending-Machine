@@ -15,7 +15,7 @@ with everyone's bank accounts, allowing customers to purchase products from thei
     > (3) Exit
     > ```
 3. The vending machine reads its inventory from an input file when the vending machine
-starts.
+starts..
 4. The vending machine is automatically restocked each time the application runs.
 5. When the customer selects "(1) Display Vending Machine Items", they're presented
 with a list of all items in the vending machine with its quantity remaining:
