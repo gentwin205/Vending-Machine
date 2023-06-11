@@ -82,9 +82,8 @@ public class VendingMachineCLI {
 
 
              System.out.println("Amount remaining $" + currentMoney+"\n");
-    }}
-
-
+         }
+        }
     }
 
     public void run() {
@@ -125,8 +124,8 @@ public class VendingMachineCLI {
                             amountDue -= quarter;
                             quarterCounter++;
 
-                        }
-                     while (amountDue >= dime){
+                    }
+                    while (amountDue >= dime){
 
                             amountDue -= dime;
                             dimeCounter++;
@@ -145,23 +144,20 @@ public class VendingMachineCLI {
                 }
                      System.out.println("You're change is " + quarterCounter +" quarters " + nickelCounter +" nickels "+ dimeCounter +" dimes.");
                      currentMoney = 0.00;
-
-
-
-                        break;
+                     quarterCounter=0;
+                     dimeCounter=0;
+                     nickelCounter=0;
+                     break;
                 }
-
-
             }
-
-        } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
+            } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
                 System.out.println("Thank You for using the Vendo-Matic 800");
                 System.out.println("Goodbye!");
                 break;
             }
 
-
-    }}
+        }
+    }
 
 
 
