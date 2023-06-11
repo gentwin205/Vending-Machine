@@ -2,9 +2,9 @@ package com.techelevator;
 
 import com.techelevator.view.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class VendingMachineCLI {
@@ -19,7 +19,20 @@ public class VendingMachineCLI {
 
     private static final String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_OPTION_EXIT, MAIN_MENU_SECRET_OPTION};
     private static final String[] PURCHASE_MENU_OPTIONS = {PURCHASE_MENU_OPTION_FEED_MONEY, PURCHASE_MENU_OPTION_SELECT_PRODUCT, PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
+    DateTimeFormatter timeFormatterForLog = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    String timeLog = timeFormatterForLog.format(LocalDateTime.now());
+    File log = new File("log.txt");
+    FileWriter logFile;
 
+    {
+        try {
+            logFile = new FileWriter(log, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    PrintWriter logWriter = new PrintWriter(logFile);
 
     private Menu menu;
     private ItemInventory itemInventory;
@@ -41,10 +54,15 @@ public class VendingMachineCLI {
 
     public VendingMachineCLI(Menu menu) {
         this.menu = menu;
+        this.itemInventory = new ItemInventory();
     }
 
     public void vendingMachineItems(){
-        this.itemInventory = new ItemInventory();
+        //this.itemInventory = new ItemInventory();
+        printInventoryItems();
+    }
+
+    private void printInventoryItems() {
         for (Map.Entry<String, Items> item : itemInventory.getVendingItems().entrySet()) {
             System.out.println(item.getKey() + " " + item.getValue().getName() + " " + item.getValue().getPrice() + " " + item.getValue().getQuantity());
         }
@@ -59,9 +77,10 @@ public class VendingMachineCLI {
         }else{
             double price = item.getPrice();
             String name = item.getName();
-            int quantity = item.getQuantity();
+
             String sound = item.sound();
-            item.setQuantity(item.getQuantity()-1);
+
+
 
 
 
@@ -69,17 +88,21 @@ public class VendingMachineCLI {
 
          if (currentMoney < price){
             System.out.println("Insufficient funds");
-        }else if(quantity <= 0){
+        }else if(item.getQuantity() <= 0){
             System.out.println("Sold Out");
 
 
         } else {
+             item.incrementQuantity();
         System.out.println(name);
         System.out.println(price);
         System.out.println(sound);
 
 
+
         currentMoney -= price;
+             logWriter.println(timeLog +" " + item.getName() + " " + slot + " " + "$" + amount + " " + "$" + currentMoney );
+             logWriter.flush();
 
 
 
@@ -110,9 +133,13 @@ public class VendingMachineCLI {
                     System.out.println("Please enter a dollar amount to add");
                     double amount = scan.nextDouble();
                     currentMoney += amount;
+                    logWriter.println(timeLog +  " FEED MONEY: " + "$" + amount + " $" + currentMoney);
+                    logWriter.flush();
 
                 } else if (choice2.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
-                    vendingMachineItems();
+
+
+                    printInventoryItems();
 
                     System.out.println("Please enter a key");
                     slot = scan.nextLine();
@@ -147,16 +174,20 @@ public class VendingMachineCLI {
 
                 }
                      System.out.println("You're change is " + quarterCounter +" quarters " + nickelCounter +" nickels "+ dimeCounter +" dimes.");
-                     currentMoney = 0.00;
+                    logWriter.println(timeLog + " " + "GIVE CHANGE:" + " " + currentMoney + "$0.00" );
+                    logWriter.flush();
+                    currentMoney = 0.00;
                      quarterCounter=0;
                      dimeCounter=0;
                      nickelCounter=0;
+
                      break;
                 }
             }
             } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
                 System.out.println("Thank You for using the Vendo-Matic 800");
                 System.out.println("Goodbye!");
+
                 break;
             }
 
@@ -172,4 +203,5 @@ public class VendingMachineCLI {
 
 
     }
+
 }

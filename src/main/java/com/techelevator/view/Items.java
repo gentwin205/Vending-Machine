@@ -36,7 +36,7 @@ public abstract class Items {
 
     public void incrementQuantity(){
 
-        quantity-=1;
+        quantity--;
     }
 
     public abstract String sound();
