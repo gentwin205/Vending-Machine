@@ -53,6 +53,7 @@ public class ItemInventory {
     public Items getVendingItems(String slot) {
         return vendingItems.get(slot);
     }
+
 }
 
 

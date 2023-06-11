@@ -5,10 +5,7 @@ import com.techelevator.view.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class VendingMachineCLI {
     private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
@@ -37,6 +34,7 @@ public class VendingMachineCLI {
     int quarterCounter = 0;
     int nickelCounter = 0;
     int dimeCounter = 0;
+    Map<String, Items> item = new LinkedHashMap<>();
 
 
 
@@ -54,6 +52,7 @@ public class VendingMachineCLI {
 
     public void dispense(){
 
+
         Items item = itemInventory.getVendingItems(slot);
         if (item == null){
             System.out.println("Item does not exist");
@@ -62,6 +61,9 @@ public class VendingMachineCLI {
             String name = item.getName();
             int quantity = item.getQuantity();
             String sound = item.sound();
+            item.setQuantity(item.getQuantity()-1);
+
+
 
 
 
@@ -75,7 +77,7 @@ public class VendingMachineCLI {
         System.out.println(name);
         System.out.println(price);
         System.out.println(sound);
-        item.setQuantity(item.getQuantity() - 1);
+
 
         currentMoney -= price;
 
@@ -115,6 +117,8 @@ public class VendingMachineCLI {
                     System.out.println("Please enter a key");
                     slot = scan.nextLine();
                     dispense();
+
+
 
                 } else if (choice2.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
 
