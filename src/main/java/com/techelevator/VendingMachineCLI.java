@@ -28,9 +28,16 @@ public class VendingMachineCLI {
     private ItemInventory itemInventory;
     double remaining = 0.00;
     double currentMoney = 0.00;
-    int count = 0;
+    int amount = 0;
     String slot = "";
     String choice2 ="";
+    Double quarter = .25;
+    Double dime = .10;
+    Double nickel =.05;
+    int quarterCounter = 0;
+    int nickelCounter = 0;
+    int dimeCounter = 0;
+
 
 
 
@@ -48,30 +55,35 @@ public class VendingMachineCLI {
     public void dispense(){
 
         Items item = itemInventory.getVendingItems(slot);
-        double price = item.getPrice();
-        String name = item.getName();
-        int quantity = item.getQuantity();
-        String sound = item.sound();
+        if (item == null){
+            System.out.println("Item does not exist");
+        }else{
+            double price = item.getPrice();
+            String name = item.getName();
+            int quantity = item.getQuantity();
+            String sound = item.sound();
 
 
-        if (currentMoney < price){
+
+         if (currentMoney < price){
             System.out.println("Insufficient funds");
         }else if(quantity <= 0){
             System.out.println("Sold Out");
-        // doesn't work properly might need throw catch
-        }else if(slot.isEmpty()){
-            System.out.println("Item does not exist");
+
 
         } else {
         System.out.println(name);
         System.out.println(price);
         System.out.println(sound);
+        item.setQuantity(item.getQuantity() - 1);
+
         currentMoney -= price;
 
-        System.out.println("Amount remaining $" + currentMoney+"\n");
-        System.out.println(MAIN_MENU_OPTION_PURCHASE);
 
-    }
+
+             System.out.println("Amount remaining $" + currentMoney+"\n");
+    }}
+
 
     }
 
@@ -104,12 +116,41 @@ public class VendingMachineCLI {
                     System.out.println("Please enter a key");
                     slot = scan.nextLine();
                     dispense();
+
                 } else if (choice2.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
+
                     double amountDue = currentMoney;
-                    currentMoney = 0.00;
+                    while (amountDue >= quarter){
+
+                            amountDue -= quarter;
+                            quarterCounter++;
+
+                        }
+                     while (amountDue >= dime){
+
+                            amountDue -= dime;
+                            dimeCounter++;
+
+
+                    } while (amountDue >= nickel){
+
+                            currentMoney -= nickel;
+                            nickelCounter++;
+
+
+
+
 
 
                 }
+                     System.out.println("You're change is " + quarterCounter +" quarters " + nickelCounter +" nickels "+ dimeCounter +" dimes.");
+                     currentMoney = 0.00;
+
+
+
+                        break;
+                }
+
 
             }
 

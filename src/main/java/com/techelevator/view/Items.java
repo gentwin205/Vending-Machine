@@ -6,7 +6,7 @@ public abstract class Items {
 
     private double price;
 
-    private  int quantity;
+    private int quantity;
 
 
     public String getName() {
@@ -21,13 +21,21 @@ public abstract class Items {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
 
+        this.quantity = quantity;
+
+    }
 
     public Items(String name, double price, int quantity) {
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
+        this.quantity= quantity;
 
+    }
+
+    public void incrementQuantity(){
+        quantity--;
     }
 
     public abstract String sound();
