@@ -19,7 +19,7 @@ public class VendingMachineCLI {
 
     private static final String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_OPTION_EXIT, MAIN_MENU_SECRET_OPTION};
     private static final String[] PURCHASE_MENU_OPTIONS = {PURCHASE_MENU_OPTION_FEED_MONEY, PURCHASE_MENU_OPTION_SELECT_PRODUCT, PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
-    DateTimeFormatter timeFormatterForLog = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    DateTimeFormatter timeFormatterForLog = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
     String timeLog = timeFormatterForLog.format(LocalDateTime.now());
     File log = new File("log.txt");
     FileWriter logFile;
@@ -47,10 +47,6 @@ public class VendingMachineCLI {
     int quarterCounter = 0;
     int nickelCounter = 0;
     int dimeCounter = 0;
-    Map<String, Items> item = new LinkedHashMap<>();
-
-
-
 
     public VendingMachineCLI(Menu menu) {
         this.menu = menu;
@@ -58,7 +54,6 @@ public class VendingMachineCLI {
     }
 
     public void vendingMachineItems(){
-        //this.itemInventory = new ItemInventory();
         printInventoryItems();
     }
 
@@ -70,48 +65,46 @@ public class VendingMachineCLI {
 
     public void dispense(){
 
-
         Items item = itemInventory.getVendingItems(slot);
+
         if (item == null){
-            System.out.println("Item does not exist");
+
+            System.out.println("Item does not exist please select another item.\n");
+
         }else{
+
             double price = item.getPrice();
             String name = item.getName();
-
             String sound = item.sound();
 
+            if (currentMoney < price){
 
+            System.out.println("Insufficient funds, please add more money.\n");
 
-
-
-
-
-         if (currentMoney < price){
-            System.out.println("Insufficient funds");
         }else if(item.getQuantity() <= 0){
-            System.out.println("Sold Out");
 
+            System.out.println("Sold Out!!\n");
 
         } else {
-             item.incrementQuantity();
+
+                item.incrementQuantity();
         System.out.println(name);
         System.out.println(price);
         System.out.println(sound);
-
-
-
         currentMoney -= price;
-             logWriter.println(timeLog +" " + item.getName() + " " + slot + " " + "$" + amount + " " + "$" + currentMoney );
-             logWriter.flush();
 
-
+        logWriter.println(timeLog +" " + item.getName() + " " + slot + " $" + item.getPrice() + " $" + currentMoney );
+        logWriter.flush();
 
              System.out.println("Amount remaining $" + currentMoney+"\n");
+
          }
+
         }
     }
 
     public void run() {
+
         while (true) {
 
             String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
@@ -124,7 +117,9 @@ public class VendingMachineCLI {
             } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 // do purchase
                 while(true){
-                System.out.println("Current Money Provided: $" + currentMoney + "");
+
+                System.out.println("Current Money Provided: $" + currentMoney);
+
               choice2 = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
                 Scanner scan = new Scanner(System.in);
 
@@ -133,6 +128,7 @@ public class VendingMachineCLI {
                     System.out.println("Please enter a dollar amount to add");
                     double amount = scan.nextDouble();
                     currentMoney += amount;
+
                     logWriter.println(timeLog +  " FEED MONEY: " + "$" + amount + " $" + currentMoney);
                     logWriter.flush();
 
@@ -142,7 +138,7 @@ public class VendingMachineCLI {
                     printInventoryItems();
 
                     System.out.println("Please enter a key");
-                    slot = scan.nextLine();
+                    slot = scan.nextLine().toUpperCase();
                     dispense();
 
 
@@ -164,19 +160,16 @@ public class VendingMachineCLI {
 
                     } while (amountDue >= nickel){
 
-                            currentMoney -= nickel;
+                            amountDue -= nickel;
                             nickelCounter++;
 
-
-
-
-
-
                 }
-                     System.out.println("You're change is " + quarterCounter +" quarters " + nickelCounter +" nickels "+ dimeCounter +" dimes.");
-                    logWriter.println(timeLog + " " + "GIVE CHANGE:" + " " + currentMoney + "$0.00" );
+                    System.out.println("You're change is " + quarterCounter +" quarters " + nickelCounter +" nickels "+ dimeCounter +" dimes.");
+
+                    logWriter.println(timeLog +  " GIVE CHANGE: " + "$" + currentMoney + " $0.00" );
                     logWriter.flush();
-                    currentMoney = 0.00;
+
+                     currentMoney = 0.00;
                      quarterCounter=0;
                      dimeCounter=0;
                      nickelCounter=0;

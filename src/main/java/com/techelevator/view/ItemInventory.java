@@ -31,7 +31,6 @@ public class ItemInventory {
                 if (newLine[3].contains("Chip")){
                     vendingItems.put(newLine[0], new Chips(newLine[1], Double.parseDouble(newLine[2]), MAX));
 
-
                 }
                 else if(newLine[3].contains("Candy")){
                     vendingItems.put(newLine[0], new Candy(newLine[1], Double.parseDouble(newLine[2]), MAX));
