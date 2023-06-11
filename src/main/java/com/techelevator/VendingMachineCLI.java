@@ -4,6 +4,7 @@ import com.techelevator.view.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class VendingMachineCLI {
             System.out.println(item.getKey() + " " + item.getValue().getName() + " " + item.getValue().getPrice() + " " + item.getValue().getQuantity());
         }
     }
+
     public void dispense(){
 
         Items item = itemInventory.getVendingItems(slot);
@@ -51,31 +53,27 @@ public class VendingMachineCLI {
         int quantity = item.getQuantity();
         String sound = item.sound();
 
-        //Not sure how to lead back to purchase menu
 
         if (currentMoney < price){
             System.out.println("Insufficient funds");
-            System.out.println(PURCHASE_MENU_OPTIONS);
-
         }else if(quantity <= 0){
             System.out.println("Sold Out");
-            System.out.println(PURCHASE_MENU_OPTIONS);
         // doesn't work properly might need throw catch
-        }else if(slot == null){
+        }else if(slot.isEmpty()){
             System.out.println("Item does not exist");
-            System.out.println(PURCHASE_MENU_OPTIONS);
 
         } else {
         System.out.println(name);
         System.out.println(price);
         System.out.println(sound);
         currentMoney -= price;
+
         System.out.println("Amount remaining $" + currentMoney+"\n");
         System.out.println(MAIN_MENU_OPTION_PURCHASE);
 
     }
-    }
 
+    }
 
     public void run() {
         while (true) {
@@ -87,9 +85,9 @@ public class VendingMachineCLI {
                 vendingMachineItems();
 
 
-
             } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 // do purchase
+                while(true){
                 System.out.println("Current Money Provided: $" + currentMoney + "");
               choice2 = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
                 Scanner scan = new Scanner(System.in);
@@ -115,10 +113,15 @@ public class VendingMachineCLI {
 
             }
 
-        }
+        } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
+                System.out.println("Thank You for using the Vendo-Matic 800");
+                System.out.println("Goodbye!");
+                break;
+            }
 
 
-    }
+    }}
+
 
 
     public static void main(String[] args) {
