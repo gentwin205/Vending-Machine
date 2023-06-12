@@ -34,7 +34,7 @@ public abstract class Items {
 
     }
 
-    public void incrementQuantity(){
+    public void decrementQuantity(){
 
         quantity--;
     }

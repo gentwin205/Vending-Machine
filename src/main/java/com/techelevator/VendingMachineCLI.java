@@ -12,13 +12,22 @@ public class VendingMachineCLI {
     private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
     private static final String MAIN_MENU_OPTION_EXIT = "Exit";
     private static final String MAIN_MENU_SECRET_OPTION = "*Sales Report";
-
     private static final String PURCHASE_MENU_OPTION_FEED_MONEY = "Feed Money";
     private static final String PURCHASE_MENU_OPTION_SELECT_PRODUCT = "Select Product";
     private static final String PURCHASE_MENU_OPTION_FINISH_TRANSACTION = "Finish Transaction";
-
     private static final String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_OPTION_EXIT, MAIN_MENU_SECRET_OPTION};
     private static final String[] PURCHASE_MENU_OPTIONS = {PURCHASE_MENU_OPTION_FEED_MONEY, PURCHASE_MENU_OPTION_SELECT_PRODUCT, PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
+    private Menu menu;
+    private ItemInventory itemInventory;
+    double currentMoney = 0.00;
+    String slot = "";
+    String choice2 ="";
+    Double quarter = .25;
+    Double dime = .10;
+    Double nickel =.05;
+    int quarterCounter = 0;
+    int nickelCounter = 0;
+    int dimeCounter = 0;
     DateTimeFormatter timeFormatterForLog = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
     String timeLog = timeFormatterForLog.format(LocalDateTime.now());
     File log = new File("log.txt");
@@ -34,34 +43,37 @@ public class VendingMachineCLI {
 
     PrintWriter logWriter = new PrintWriter(logFile);
 
-    private Menu menu;
-    private ItemInventory itemInventory;
-    double remaining = 0.00;
-    double currentMoney = 0.00;
-    int amount = 0;
-    String slot = "";
-    String choice2 ="";
-    Double quarter = .25;
-    Double dime = .10;
-    Double nickel =.05;
-    int quarterCounter = 0;
-    int nickelCounter = 0;
-    int dimeCounter = 0;
+    File sales = new File("Sales Log.txt");
+    FileWriter salesFile;
+    {
+        try{
+            salesFile = new FileWriter(sales, true);
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+    PrintWriter salesWriter = new PrintWriter(salesFile);
 
     public VendingMachineCLI(Menu menu) {
         this.menu = menu;
         this.itemInventory = new ItemInventory();
     }
 
+    public VendingMachineCLI() {
+
+    }
+
     public void vendingMachineItems(){
         printInventoryItems();
     }
+
 
     private void printInventoryItems() {
         for (Map.Entry<String, Items> item : itemInventory.getVendingItems().entrySet()) {
             System.out.println(item.getKey() + " " + item.getValue().getName() + " " + item.getValue().getPrice() + " " + item.getValue().getQuantity());
         }
     }
+
 
     public void dispense(){
 
@@ -87,7 +99,7 @@ public class VendingMachineCLI {
 
         } else {
 
-                item.incrementQuantity();
+                item.decrementQuantity();
         System.out.println(name);
         System.out.println(price);
         System.out.println(sound);
@@ -96,10 +108,8 @@ public class VendingMachineCLI {
         logWriter.println(timeLog +" " + item.getName() + " " + slot + " $" + item.getPrice() + " $" + currentMoney );
         logWriter.flush();
 
-             System.out.println("Amount remaining $" + currentMoney+"\n");
-
-         }
-
+        System.out.println("Amount remaining $" + currentMoney+"\n");
+            }
         }
     }
 
@@ -125,7 +135,7 @@ public class VendingMachineCLI {
 
 
                 if (choice2.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
-                    System.out.println("Please enter a dollar amount to add");
+                    System.out.print("Please enter a dollar amount to add >>> ");
                     double amount = scan.nextDouble();
                     currentMoney += amount;
 
@@ -137,7 +147,7 @@ public class VendingMachineCLI {
 
                     printInventoryItems();
 
-                    System.out.println("Please enter a key");
+                    System.out.print("Please enter a key >>> ");
                     slot = scan.nextLine().toUpperCase();
                     dispense();
 
@@ -146,6 +156,7 @@ public class VendingMachineCLI {
                 } else if (choice2.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
 
                     double amountDue = currentMoney;
+
                     while (amountDue >= quarter){
 
                             amountDue -= quarter;
@@ -182,6 +193,10 @@ public class VendingMachineCLI {
                 System.out.println("Goodbye!");
 
                 break;
+            } else if (choice.equals(MAIN_MENU_SECRET_OPTION)){
+                System.out.println("Here's the report");
+                salesWriter.println(timeLog +" "+ itemInventory.getVendingItems(String.valueOf(1)) + " " +itemInventory.getVendingItems(String.valueOf(3)));
+                salesWriter.flush();
             }
 
         }
